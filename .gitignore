@@ -1,0 +1,21 @@
+# Arquivos e pastas do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários de editores
+*.swp
+*.swo
+*~
+*.bak
+
+# Arquivos de log e temporários
+*.log
+*.tmp
+
+# Builds e empacotamento
+love-release/
+build/
+dist/
+
+# Saves ou arquivos gerados em runtime
+saves/
