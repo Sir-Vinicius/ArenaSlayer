@@ -1,6 +1,7 @@
 # Arquivos e pastas do sistema
 .DS_Store
 Thumbs.db
+.vscode/
 
 # Arquivos temporários de editores
 *.swp
