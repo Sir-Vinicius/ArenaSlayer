@@ -18,6 +18,11 @@ function love.load()
     -- Initialize random seed
     math.randomseed(os.time())
     
+    player = require("player")
+    -- call cards 
+    require("cards")
+    levelUp()
+    
     -- Initialize game
     game = Game.new()
     game:load()
@@ -82,6 +87,16 @@ function love.mousepressed(x, y, button)
             game.touchControls:touchPressed(1, x, y)
         end
     end
+    if showCardSelection then
+    for i, card in ipairs(cardChoices) do
+        if x > 100 and x < 500 and y > i * 120 and y < i * 120 + 100 then
+            card.apply(player)
+            table.insert(selectedCards, card.id)
+            showCardSelection = false
+            break
+        end
+    end
+    end
 end
 
 -- Handle mouse movement as touch for testing on desktop
@@ -100,4 +115,8 @@ function love.mousereleased(x, y, button)
             game.touchControls:touchReleased(1, x, y)
         end
     end
+end
+
+function love.mousepressed(x, y, button)
+    game:mousepressed(x, y, button)
 end

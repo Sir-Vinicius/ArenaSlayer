@@ -19,6 +19,11 @@ function Player.new(x, y)
     self.movingLeft = false
     self.movingRight = false
     
+    -- Level
+    self.xp = 0
+    self.level = 1
+    self.xpToNext = 10
+    
     -- Touch input
     self.touchControlled = false
     
@@ -28,6 +33,11 @@ function Player.new(x, y)
     self.damage = 20
     self.invulnerabilityTimer = 0
     self.invulnerabilityDuration = 0.5 -- Invulnerable for 0.5 seconds after taking damage
+    
+       -- Inicializações necessárias para cartas
+    self.regen = 0
+    self.hasFireAura = false
+    self.spawnShadow = false
     
     -- Appearance
     self.color = {0.2, 0.6, 1} -- Blue
@@ -128,6 +138,16 @@ function Player:keyreleased(key)
     end
     if key == "d" or key == "right" then
         self.movingRight = false
+    end
+end
+
+function Player:checkLevelUp()
+    while self.xp >= self.xpToNext do
+        self.xp = self.xp - self.xpToNext
+        self.level = self.level + 1
+        self.xpToNext = math.floor(self.xpToNext * 1.5)
+
+        levelUp() -- call the card selection
     end
 end
 

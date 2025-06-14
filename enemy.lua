@@ -71,8 +71,10 @@ function Enemy:draw()
     love.graphics.setColor(1, 1, 1)
 end
 
-function Enemy:takeDamage(amount)
+function Enemy:takeDamage(amount, player)
     self.health = math.max(0, self.health - amount)
+    player.xp = player.xp + 5
+    player:checkLevelUp()
 end
 
 return Enemy

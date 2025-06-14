@@ -4,6 +4,15 @@ local Player = require('player')
 local Enemy = require('enemy')
 local UI = require('ui')
 local TouchControls = require('touch_controls')
+local cards = require("cards")
+local selectedCards = {}
+local showCardSelection = false
+local cardChoices = {}
+
+function levelUp()
+    showCardSelection = true
+    cardChoices = cards:getRandom(3)
+end
 
 local Game = {}
 Game.__index = Game
@@ -75,7 +84,7 @@ function Game:update(dt)
             if self:checkCollision(self.player, enemy) then
                 -- Player and enemy take damage
                 self.player:takeDamage(enemy.damage)
-                enemy:takeDamage(self.player.damage)
+                enemy:takeDamage(self.player.damage, self.player)
                 
                 -- Remove dead enemies
                 if enemy.health <= 0 then
@@ -90,6 +99,24 @@ function Game:update(dt)
             self.state = GAME_STATE.GAME_OVER
         end
     end
+    
+    -- Regeneração
+    if self.player.regen and self.player.regen > 0 then
+        self.player.health = math.min(self.player.health + self.player.regen * dt, self.player.maxHealth)
+    end
+
+    -- Aura flamejante (exemplo simples de dano em inimigos próximos)
+    if self.player.hasFireAura then
+        for _, enemy in ipairs(self.enemies) do
+            local dx = enemy.x - self.player.x
+            local dy = enemy.y - self.player.y
+            local dist = math.sqrt(dx * dx + dy * dy)
+            if dist < 40 then
+                enemy:takeDamage(5 * dt)
+            end
+        end
+    end
+    
 end
 
 -- Draw the game
@@ -112,6 +139,23 @@ function Game:draw()
         -- Draw game over screen
         self:drawGameOver()
     end
+    if showCardSelection then
+    for i, card in ipairs(cardChoices) do
+      local y = 150 + (i - 1) * 130
+      love.graphics.rectangle("line", 100, i * 120, 400, 100)
+        love.graphics.print(card.name, 120, i * 120 + 10)
+        love.graphics.print(card.description, 120, i * 120 + 40)
+    end
+end
+
+-- Draw XP info 
+love.graphics.print("XP: " .. self.player.xp .. " / " .. self.player.xpToNext, 10, 10)
+love.graphics.print("Nível: " .. self.player.level, 10, 30)
+
+for i, card in ipairs(selectedCards) do
+    love.graphics.print("- " .. card.name, 10, 50 + i * 20)
+end
+
 end
 
 -- Check collision between two entities (using simple rectangle collision)
@@ -207,6 +251,28 @@ function Game:reset()
     -- Initial enemies
     self:spawnEnemy()
     self:spawnEnemy()
+end
+
+function Game:mousepressed(x, y, button)
+    if showCardSelection and button == 1 then
+        for i, card in ipairs(cardChoices) do
+            local cardX, cardY = 100, i * 120
+            local cardWidth, cardHeight = 400, 100
+
+            if x >= cardX and x <= cardX + cardWidth and y >= cardY and y <= cardY + cardHeight then
+                -- Aplica o efeito da carta no player
+                card.apply(self.player)
+                
+                -- Armazena como carta escolhida
+                table.insert(selectedCards, card)
+                
+                -- Fecha a seleção
+                showCardSelection = false
+                
+                break
+            end
+        end
+    end
 end
 
 return Game
