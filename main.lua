@@ -11,18 +11,18 @@ local game
 function love.load()
     -- Set up the window
     love.window.setTitle("Arena RPG")
-    
+
     -- Make the window resizable for better mobile compatibility
-    love.window.setMode(800, 600, {resizable = true})
-    
+    love.window.setMode(800, 600, { resizable = true })
+
     -- Initialize random seed
     math.randomseed(os.time())
-    
+
     player = require("player")
-    -- call cards 
+    -- call cards
     require("cards")
     levelUp()
-    
+
     -- Initialize game
     game = Game.new()
     game:load()
@@ -45,7 +45,7 @@ function love.keypressed(key)
     if key == "escape" then
         love.event.quit()
     end
-    
+
     -- Pass key presses to game
     game:keypressed(key)
 end
@@ -88,14 +88,14 @@ function love.mousepressed(x, y, button)
         end
     end
     if showCardSelection then
-    for i, card in ipairs(cardChoices) do
-        if x > 100 and x < 500 and y > i * 120 and y < i * 120 + 100 then
-            card.apply(player)
-            table.insert(selectedCards, card.id)
-            showCardSelection = false
-            break
+        for i, card in ipairs(cardChoices) do
+            if x > 100 and x < 500 and y > i * 120 and y < i * 120 + 100 then
+                card.apply(player)
+                table.insert(selectedCards, card.id)
+                showCardSelection = false
+                break
+            end
         end
-    end
     end
 end
 
