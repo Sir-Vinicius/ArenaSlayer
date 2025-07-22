@@ -9,6 +9,10 @@ local game
 
 -- LÖVE initialization function
 function love.load()
+    -- Run libraries
+    sti = require "libraries/sti"
+    gameMap = sti('maps/testMap.lua')
+
     -- Set up the window
     love.window.setTitle("Arena RPG")
 
@@ -36,6 +40,7 @@ end
 
 -- LÖVE draw function - called after update
 function love.draw()
+    gameMap:draw()
     game:draw()
 end
 

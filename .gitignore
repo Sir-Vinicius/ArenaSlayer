@@ -17,6 +17,7 @@ Thumbs.db
 love-release/
 build/
 dist/
+arquivo.love
 
 # Saves ou arquivos gerados em runtime
 saves/
